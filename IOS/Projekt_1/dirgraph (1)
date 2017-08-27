@@ -1,0 +1,282 @@
+#!/bin/sh
+
+# Datum:       25.03.2017
+# Autor:       Marek Kukucka, xkukuc04@stud.fit.vutbr.cz , 1-BIT
+# Projekt:     Projekt 1 - dirgraph
+
+POSIXLY_CORRECT=yes
+
+#funkce slouzici pro vypis histogramu typu souboru
+fthist()
+{
+find -H "$DIR" -type f -print0 | xargs -0 file -b |tr "\n" "\0" | xargs -0 printf "%.40s\n"  | sort | uniq -c | sort -n -r | awk 'NR==1,NR==10 { print $0}' |awk '{printf" ";values=$1; $1="";len=length($0); if(len == 41){ printf ("%-40s...: ",$0);}else if(len == 40){printf "%-40s ...: ",$0;} else {printf "%-44s: ",$0;}} {sharp="#"; for (i=0;i < values; i++) printf sharp }{printf "\n"}'
+}
+
+fthist_i()
+{
+find -H "$DIR" -type f | egrep $vysek -v | tr "\n" "\0" | xargs -0 file -b |tr "\n" "\0" | xargs -0 printf "%.40s\n"  | sort | uniq -c | sort -n -r | awk 'NR==1,NR==10 { print $0}' | awk '{printf" ";values=$1; $1="";len=length($0); if(len == 41){ printf ("%-40s...: ",$0);}else if(len == 40){printf "%-40s ...: ",$0;} else {printf "%-44s: ",$0;}} {sharp="#"; for (i=0;i < values; i++) printf sharp }{printf "\n"}'
+}
+
+fthist_n()
+{
+max_hash_len=$((max_length - 48))
+find -H "$DIR" -type f -print0 | xargs -0 file -b |tr "\n" "\0" | xargs -0 printf "%.40s\n"  | sort | uniq -c | sort -n -r | awk 'NR==1,NR==10 { print $0}' |awk 'BEGIN{maxlen='$max_hash_len';condition=1; normalizer=maxlen}{if(maxlen < $1) {if(condition == 1) {normalizer=$1; condition=0;}} else  {condition=2;}}{printf" ";values=$1; $1=""; val=int(values*maxlen/normalizer);len=length($0); if(len == 41){ printf ("%-40s...: ",$0);}else if(len == 40){printf "%-40s ...: ",$0;} else {printf "%-44s: ",$0;}} {sharp="#"; for (i=0;i < val; i++) printf sharp }{printf "\n"}'
+}
+
+fthist_ni()
+{
+max_hash_len=$((max_length - 48))
+find -H "$DIR" -type f |egrep $vysek -v | tr "\n" "\0" | xargs -0 file -b |tr "\n" "\0" | xargs -0 printf "%.40s\n"  | sort | uniq -c | sort -n -r | awk 'NR==1,NR==10 { print $0}' |awk 'BEGIN{maxlen='$max_hash_len';condition=1; normalizer=maxlen}{if(maxlen < $1) {if(condition == 1) {normalizer=$1; condition=0;}} else  {condition=2;}}{printf" ";values=$1; $1=""; val=int(values*maxlen/normalizer);len=length($0);if(len == 41){ printf ("%-40s...: ",$0);}else if(len == 40){printf "%-40s ...: ",$0;} else {printf "%-44s: ",$0;}} {sharp="#"; for (i=0;i < val; i++) printf sharp }{printf "\n"}'
+}
+
+#funkce slouzici k vypisu mrizek
+sharp_printer()
+{
+NUMBER=$1
+while [ "$NUMBER" -gt 0 ];do
+	printf "#";
+       NUMBER=$((NUMBER-1));
+done
+printf "\n" 
+}
+#funkce slouzici k vypisu file size histogramu
+fshist(){
+printf "  <100 B  : "
+sharp_printer $LB_100
+printf "  <1 KiB  : "
+sharp_printer $LKiB_1
+printf "  <10 KiB : "
+sharp_printer $LKiB_10
+printf "  <100 KiB: "
+sharp_printer $LKiB_100
+printf "  <1 MiB  : "
+sharp_printer $LMiB_1
+printf "  <10 MiB : "
+sharp_printer $LMiB_10
+printf "  <100 MiB: "
+sharp_printer $LMiB_100
+printf "  <1 GiB  : " 
+sharp_printer $LGiB_1
+printf "  >=1 GiB : "
+sharp_printer $MGiB_1
+}
+fshist_n(){
+max_hash_print=$((max_length - 13))
+max=1
+
+if [ "$max" -lt "$LB_100" ];
+then
+	max=$LB_100
+fi
+
+if [ "$max" -lt "$LKiB_1" ];
+then
+	max=$LKiB_1
+fi
+
+if [ "$max" -lt "$LKiB_10" ];
+then
+	max=$LKiB_10
+fi
+
+if [ "$max" -lt "$LKiB_100" ];
+then
+	max=$LKiB_100
+fi
+
+if [ "$max" -lt "$LMiB_1" ];
+then
+	max=$LMiB
+fi
+
+if [ "$max" -lt "$LMiB_10" ];
+then
+	max=$LMiB_10
+fi
+
+if [ "$max" -lt "$LMiB_100" ];
+then 
+	max=$LMiB_100
+fi
+
+if [ "$max" -lt "$LGiB_1" ];
+then
+	max=$LGiB_1
+fi
+
+if [ "$max" -lt "$MGiB_1" ];
+then
+	max=$MGiB_1
+fi
+
+LB_100_n=$((max_hash_print*LB_100/max))
+LKiB_1_n=$((max_hash_print*LKiB_1/max))
+LKiB_10_n=$((max_hash_print*LKiB_10/max))
+LKiB_100_n=$((max_hash_print*LKiB_100/max))
+LMiB_1_n=$((max_hash_print*LMiB_1/max))
+LMiB_10_n=$((max_hash_print*LMiB_10/max))
+LMiB_100_n=$((max_hash_print*LMiB_100/max))
+LGiB_1_n=$((max_hash_print*LGiB_1/max))
+MGiB_1_n=$((max_hash_print*MGiB_1/max))
+
+
+if [ "$max_hash_print" -lt "$max" ];
+then
+	printf "  <100 B  : "
+	sharp_printer $LB_100_n
+	printf "  <1 KiB  : "
+	sharp_printer $LKiB_1_n
+	printf "  <10 KiB : "
+	sharp_printer $LKiB_10_n
+	printf "  <100 KiB: "
+	sharp_printer $LKiB_100_n
+	printf "  <1 MiB  : "
+	sharp_printer $LMiB_1_n
+	printf "  <10 MiB : "
+	sharp_printer $LMiB_10_n
+	printf "  <100 MiB: "
+	sharp_printer $LMiB_100_n
+	printf "  <1 GiB  : "
+	sharp_printer $LGiB_1_n
+	printf "  >=1 GiB : "
+	sharp_printer $MGiB_1_n
+
+elif [ "$max" -le "$max_hash_print" ]
+then
+	fshist
+fi
+}
+
+#nastaveni cwd
+DIR="." 
+nflag=0
+iflag=0
+
+
+
+#hledani prepinacu
+while getopts :ni: o;do
+	case $o in
+	n)
+		if [ "$nflag" -eq 1 ];
+		then
+			echo "Prepinac -n zadan vicekrat" >&2
+			exit 1
+		fi
+		nflag=1
+		;;
+	i) 	
+		if [ "$iflag" -eq 1 ];
+		then
+			echo "Prepinac -i zadan vicekrat" >&2
+			exit 1
+		fi
+		iflag=1
+		file_err=$OPTARG
+		;;
+	:)
+		echo "Prepinac i vyzaduje argument" >&2
+		exit 1
+		;;
+	*)
+		echo "Incorrect syntax" >&2
+		exit 1
+		;;
+	esac
+done
+
+shift $((OPTIND-1))
+
+if [ -t 0 ];
+then 
+max_length=$(tput cols)
+else
+max_length=79
+fi
+
+#kontrola zda prebyl argument ktery bude povazovan za adresar
+if [ "$#" -ne "0" ];
+then
+	DIR=$@
+fi
+
+#kontrola zda se byl zadan adresar
+if [ -d $DIR ]; 
+then
+	break
+else
+	echo "Neni zadan platny adresar" >&2
+	exit 1
+fi
+
+vysek=$(printf "%s" $file_err| sed -e 's/\^/\//')
+#pocita kolik souboru patri do jednotlivych kategorii podle velikosti
+if [ $iflag -eq "1" ]
+then
+LB_100=$(find -H $DIR  -type f -size -100c | egrep $vysek -v | wc -l)
+LKiB_1=$(find -H $DIR  -type f -size +99c -a -size -1024c | egrep $vysek -v | wc -l)
+LKiB_10=$(find -H $DIR -type f -size +1023c -a -size -10240c | egrep $vysek -v | wc -l)
+LKiB_100=$(find -H $DIR  -type f -size +10239c -a -size -102400c | egrep $vysek -v | wc -l)
+LMiB_1=$(find -H $DIR  -type f -size +102399c -a -size -1048576c | egrep $vysek -v | wc -l)
+LMiB_10=$(find -H $DIR  -type f -size +1048575c -a -size -10485760c | egrep $vysek -v | wc -l)
+LMiB_100=$(find -H $DIR  -type f -size +10485759c -a -size -104857600c | egrep $vysek -v | wc -l)
+LGiB_1=$(find -H $DIR  -type f -size +104857599c -a -size -1073741824c | egrep $vysek -v | wc -l)
+MGiB_1=$(find -H $DIR  -type f -size +1073741823c | egrep $vysek -v | wc -l)
+else
+LB_100=$(find -H $DIR  -type f -size -100c | wc -l)
+LKiB_1=$(find -H $DIR  -type f -size +99c -a -size -1024c | wc -l)
+LKiB_10=$(find -H $DIR -type f -size +1023c -a -size -10240c | wc -l)
+LKiB_100=$(find -H $DIR  -type f -size +10239c -a -size -102400c | wc -l)
+LMiB_1=$(find -H $DIR  -type f -size +102399c -a -size -1048576c | wc -l)
+LMiB_10=$(find -H $DIR  -type f -size +1048575c -a -size -10485760c | wc -l)
+LMiB_100=$(find -H $DIR  -type f -size +10485759c -a -size -104857600c | wc -l)
+LGiB_1=$(find -H $DIR  -type f -size +104857599c -a -size -1073741824c | wc -l)
+MGiB_1=$(find -H $DIR  -type f -size +1073741823c | wc -l)
+fi
+#pocet adresaru a slozek  
+if [ $iflag -eq "1" ]
+then
+NUM_OF_FILES=$(find -H $DIR -type f | egrep $vysek -v | wc -l)
+NUM_OF_DIR=$(find -H $DIR -type d | egrep $vysek -v | wc -l)
+else
+NUM_OF_FILES=$(find -H $DIR -type f  | wc -l)
+NUM_OF_DIR=$(find -H $DIR -type d  | wc -l)
+fi
+#pokud by vyslo 0 adresaru tak -i prepinac pokryva root adresar
+if [ "$NUM_OF_DIR" -eq 0 ]
+then
+	echo "Prepinac -i pokryva root adresar" >&2
+	exit 1
+fi
+
+printf "Root directory: ${DIR}\n"
+printf "Directories: %s\n" $NUM_OF_DIR
+printf "All files: %s\n" $NUM_OF_FILES
+printf "File size histogram:\n"
+#volani jednotlivych funkci v zavisloti na prepinacich
+if [ "$nflag" -eq "1" ];
+then
+	fshist_n
+else
+	fshist
+fi
+
+printf "File type histogram:\n"
+if [ "$NUM_OF_FILES" -eq 0 ]
+then
+	exit 0;
+fi
+ 
+if [ "$nflag" -eq "1" ] && [ "$iflag" -eq "1" ];
+then
+				fthist_ni
+elif [ "$nflag" -eq  "1" ];
+then
+       fthist_n
+elif [ "$iflag" -eq  "1" ];
+then
+				fthist_i
+else
+        fthist
+fi
+

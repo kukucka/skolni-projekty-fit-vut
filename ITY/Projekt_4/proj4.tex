@@ -1,0 +1,45 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[czech]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[IL2]{fontenc}
+\usepackage[left=2cm,text={17cm,24cm},top=3cm]{geometry}
+\usepackage{times}
+\bibliographystyle{czplain}
+%hlavicka
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\Huge\textsc{Vysoké učení technické v Brně} \\
+\huge\textsc{Fakulta informačních technologií} \\
+\vspace{\stretch{0.382}}
+\LARGE{Typografie a publikování -- 4.projekt} \\
+\Huge{Bibliografické citace}
+\vspace{\stretch{0.618}}
+\end{center}
+\Large\today \hfill Marek Kukučka
+\end{titlepage}
+
+\section{Písmo a~Typografie}
+Již v~dávných dobách používali naši předkové nejrůznější formy kreseb jako způsob dorozumívání. Ať šlo o~hieroglyfy v~Egyptě nebo sanskrt v~Indii, vždy byl úkol písma stejný a~to předat nějaké příběhy nebo vědomosti. A~proto se písmo dále rozvíjelo\cite{Jiricek:Zivy_font}. Písmo se vyvíjelo po staletí podobně jako architektura. S vynálezem knihtisku se začali objevovat nová písma, která byla často označována podle svých tvůrců, např. Bodomi \cite{Cerny:Znakove_sadi_v_typografickych_systemech}.
+
+Jako překvapivé se může zdát, že na technologii odlévání ručního písma pro knihtisk se od roku 1440 do poloviny dvacátého století mnoho nezměnilo. Využívala se tzv. horká sazba, přičemž jen samotná příprava návrhu pro horkou sazbu byla velmi pracná. Každá litera musela být provedena tuší na kartonu ve velikosti asi 25~cm. Ke každému řezu bylo zapotřebí 120 až 300 takových kreseb. Ty se poté pomocí pantografu mechanicky zmenšily na matrici a odtamtud na raznici, kterou se vyráželi již samotné formy pro odlévání písma \cite{Beran:Typograficky_manual}.
+
+Původním významem tisku bylo jednoduše kopírování. Prací typographa bylo imitovat ruku písaře ve formě, která umožňovala přesné a rychlé kopírování \cite{Bringhurst:The_elements_of_typographic_style}. Například úkolem typografa zabývající se knihami, je vztyčit okno mezi čtenářem v místnosti a~krajinou autorových slov \cite{Warde:The_crystal_goblet}.
+
+Při psaní textů by jsme měli dodržovat základní typografická pravidla. Tyto pravidla se týkají například volby písma, mezer, dělení slov, a~jiné \cite{Kerslager:Typograficka_pravidla}.
+
+Narozdíl od průmyslových produktů je životnost typografických
+konceptů čistě abstraktní. Koncept se stává zastaralým, jak je konzumován naší kulturou a~následně zapomenut ve prospěch jiných \cite{Licko:Discovery_by_design}.
+
+\section{{\TeX} a~\LaTeX}
+
+{\TeX} je typografický systém, kromě toho, že umožňuje sázení nabízí navíc uživatelům programovací schopnosti, jenž umožňují proces sazby výrazně ovlivňovat. V~praxi vypadá sazba asi tak, že si připravíte zdrojový text dokumentu, při jehož psaní se hojně používají makra \TeX u \cite{Burda:Texty_texen}.
+
+Jazyk {\TeX} je velice mocný, časem se ale ukázalo, že pro běžné použití je zbytečně složitý. Proto přišel Leslie Lamport s~myšlenkou, že by bylo dobré {\TeX} zjednodušit. Upravil původní {\TeX} a~vytvořil množinu maker, které zapouzdřují často používané \TeX ové konstrukce. Lamport také vytvořil sadu šablon například pro sazbu článků, knížek nebo jiných dokumentů. Svůj produkt nazval {\LaTeX}  \cite{Martinek:Latex}.
+Dnes je {\LaTeX} de~facto standardem pro publikování vědeckých dokumentů \cite{Syropulos:TeX_conference}.
+
+\newpage
+\bibliography{literatura}
+
+\end{document}
