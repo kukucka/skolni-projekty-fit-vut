@@ -1,6 +1,6 @@
 # skolni-projekty-fit-vut
 Skolni projekty za skolni rok 2016/2017. <br>
-<h2> Bodové ohodnocení projektů </h2> <br>
+<h2> Bodové ohodnocení projektů </h2>  
 IEL - 9.5/12 <br>
 IUS - 16/25 <br>
 IZP - 1.projekt - 5/5, 2.projekt - 2/7, 3.projekt - 9.8/10, 4.projekt - 4/4 <br>
